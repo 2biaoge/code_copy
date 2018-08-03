@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans 
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/aop
+        http://www.springframework.org/schema/aop/spring-aop.xsd
+        http://www.springframework.org/schema/tx
+        http://www.springframework.org/schema/tx/spring-tx.xsd
+        http://www.springframework.org/schema/context   
+        http://www.springframework.org/schema/context/spring-context.xsd   
+        http://www.springframework.org/schema/mvc   
+        http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+
+    <!--创建Dao层对象  IOC-->
+    <bean id="userDao" class="com.qf.dao.UserDaoImpl" scope="singleton"></bean>
+    <!--创建Service层对象-->
+    <bean id="userService" class="com.qf.service.UserServiceImpl">
+        <!--使用set注入  DI-->
+        <property name="userDao" ref="userDao"></property>
+        <!--给基本的标识设置值  使用value给基本属性设值-->
+        <property name="execute" value="false"></property>
+        <!--使用构造函数   名称赋值-->
+        <!--
+                <constructor-arg name="tag" value="user"></constructor-arg>
+        -->
+        <!--构造函数   索引赋值-->
+        <constructor-arg index="0" value="sss"></constructor-arg>
+
+        <!--数组-->
+        <property name="strings">
+            <array>
+                <value>老三</value>
+                <value>老五</value>
+                <value>老八</value>
+                <value>老六</value>
+            </array>
+        </property>
+        <!--List集合-->
+        <property name="list">
+            <list>
+                <value>123</value>
+                <value>463</value>
+                <value>8763</value>
+                <value>98765</value>
+            </list>
+        </property>
+        <!--Set集合-->
+        <property name="stringSet">
+            <set>
+                <value>qqqqqqq</value>
+                <value>wwwwwwww</value>
+                <value>eeeeeeeeee</value>
+            </set>
+        </property>
+        <!--Map集合-->
+        <property name="map">
+            <map>
+                <entry key="第一" value="123"></entry>
+                <entry key="第2" value="1333323"></entry>
+                <entry key="第3" value="1255555553"></entry>
+                <entry key="第4" value="126777773"></entry>
+            </map>
+        </property>
+        <!--Property文件-->
+        <property name="properties">
+            <props>
+                <prop key="kkk">坎坎坷坷</prop>
+                <prop key="lll">llll</prop>
+                <prop key="rrr">柔柔弱弱</prop>
+            </props>
+        </property>
+    </bean>
+
+</beans>
