@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans 
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/aop
+        http://www.springframework.org/schema/aop/spring-aop.xsd
+        http://www.springframework.org/schema/tx
+        http://www.springframework.org/schema/tx/spring-tx.xsd
+        http://www.springframework.org/schema/context   
+        http://www.springframework.org/schema/context/spring-context.xsd   
+        http://www.springframework.org/schema/mvc   
+        http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+
+
+    <context:component-scan base-package="com.qf.dao,com.qf.service" />
+
+
+
+       <!-- <bean id="userDao" class="com.qf.dao.UserDAOImpl" ></bean>-->
+        <bean id="userService" class="com.qf.service.UseServiceImpl">
+            <property name="userDao" ref="userDao"></property>
+
+<!--
+            <constructor-arg name="str" value="admin" />
+-->
+            <constructor-arg index="0" value="user"/>
+
+            <property name="yon" value="true"/>
+
+            <property name="arr" >
+                <array>
+                    <value>33</value>
+                    <value>666</value>
+                    <value>55</value>
+                    <value>44</value>
+                </array>
+            </property>
+
+            <property name="list">
+                <list>
+                    <value>一二</value>
+                    <value>撒娇的快乐撒放</value>
+                    <value>kjdsljsl</value>
+                    <value>----List-----</value>
+                </list>
+            </property>
+
+            <property name="integerSet">
+                <set>
+                    <value>23412</value>
+                    <value>23412</value>
+                    <value>23412</value>
+                    <value>23412</value>
+                </set>
+            </property>
+
+            <property name="map">
+                <map>
+                    <entry key="sakdjl" value="3"></entry>
+                    <entry key="s萨达jl" value="4"></entry>
+                    <entry key="ss那你发的苟富贵大概的jl" value="5"></entry>
+                    <entry key="=========Map========" value="6"></entry>
+                </map>
+            </property>
+
+            <property name="properties" >
+                <props>
+                    <prop key="wwwww">呜呜呜呜</prop>
+                    <prop key="fffff">反反复复</prop>
+                    <prop key="hhhhh">哈哈哈哈</prop>
+                    <prop key="properties">PROPERTIES</prop>
+                </props>
+            </property>
+
+        </bean>
+</beans>
