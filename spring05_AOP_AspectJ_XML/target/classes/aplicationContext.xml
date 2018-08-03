@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans 
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/aop
+        http://www.springframework.org/schema/aop/spring-aop.xsd
+        http://www.springframework.org/schema/tx
+        http://www.springframework.org/schema/tx/spring-tx.xsd
+        http://www.springframework.org/schema/context   
+        http://www.springframework.org/schema/context/spring-context.xsd   
+        http://www.springframework.org/schema/mvc   
+        http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+
+    <!--创建目标类对象-->
+    <bean id="carService" class="com.qf.service.CarServiceImpl"/>
+    <!--创建通知类对象-->
+    <bean id="myAspect" class="com.qf.advice.MyAspect"/>
+    <!--AOP自动编程-->
+
+    <aop:config>
+        <aop:aspect ref="myAspect">
+            <!--定义切入点-->
+            <aop:pointcut id="myPoint" expression="execution(* com.qf.service.*.*(..))"></aop:pointcut>
+            <!--关联切点与通知组成切面-->
+            <aop:before method="myBefore" pointcut-ref="myPoint"></aop:before>
+            <aop:after-returning method="myAfter" pointcut-ref="myPoint" returning="res"></aop:after-returning>
+            <aop:around method="myAround" pointcut-ref="myPoint"></aop:around>
+
+        </aop:aspect>
+    </aop:config>
+</beans>

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans 
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/aop
+        http://www.springframework.org/schema/aop/spring-aop.xsd
+        http://www.springframework.org/schema/tx
+        http://www.springframework.org/schema/tx/spring-tx.xsd
+        http://www.springframework.org/schema/context   
+        http://www.springframework.org/schema/context/spring-context.xsd   
+        http://www.springframework.org/schema/mvc   
+        http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+
+
+    <!--1.创建目标类对象-->
+    <bean id="studuntService" class="com.qf.service.StudentServiceImpl"></bean>
+    <!--2.创建通知类对象-->
+    <bean id="myLogAdvice" class="com.qf.advice.MyLogAround"></bean>
+    <bean id="myAfter" class="com.qf.advice.MyAfter"/>
+    <bean id="myBefore" class="com.qf.advice.MyBefore"/>
+    <!--3.创建代理类对象--><!--使用代理工厂-->
+    <bean id="studentServiceProxy" class="org.springframework.aop.framework.ProxyFactoryBean">
+        <!--整合目标类  ====关联引用的对象  ref-->
+        <property name="target" ref="studuntService"/>
+        <!--整合通知类  =====通知：可变参数 -->
+        <property name="interceptorNames" >
+            <list>
+                <!--<value>myLogAdvice</value>-->
+                <value>myAfter</value>
+             <!--   <value>myBefore</value>-->
+            </list>
+        </property>
+        <!--关联接口-->
+        <property name="proxyInterfaces">
+            <list>
+                <value>com.qf.service.StudentService</value>
+            </list>
+        </property>
+    </bean>
+</beans>
