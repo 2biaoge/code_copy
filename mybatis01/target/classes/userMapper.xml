@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--namepase 命名空间-->
+<mapper namespace="com.qf">
+
+    <select id="selectUser" resultType="com.qf.pojo.User" parameterType="java.lang.Long">
+        select * from user where id = #{id}
+    </select>
+
+    <select id="selectAll" resultType="com.qf.pojo.User">
+        select *from user
+    </select>
+
+    <insert id="add1" parameterType="com.qf.pojo.User">
+        insert into user (username,password) values (#{username},#{password})
+    </insert>
+
+    <insert id="add2" parameterType="java.util.Map">
+        insert into uiser (usermame,password) values (#{username},#{password})
+    </insert>
+
+    <delete id="del1" parameterType="java.lang.Long">
+        delete from user where id=#{id}
+    </delete>
+    <delete id="del2" parameterType="java.lang.Long">
+        delete password from user where id=#{id}
+    </delete>
+
+    <update id="update1" parameterType="com.qf.pojo.User">
+        update user set username=#{username},password=#{password} where id=#{id}
+    </update>
+
+    <update id="update2" parameterType="java.util.Map">
+        update user set password=#{password} where id=#{id}
+    </update>
+</mapper>

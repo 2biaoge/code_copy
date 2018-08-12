@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.qf.dao.CarMapper">
+    <resultMap id="BaseResultMap" type="com.qf.pojo.Car">
+        <id column="carid" property="carid" jdbcType="BIGINT"/>
+        <result column="carname" property="carname" jdbcType="VARCHAR"/>
+        <result column="carprice" property="carprice" jdbcType="DOUBLE"/>
+        <result column="cardate" property="cardate" jdbcType="DATE"/>
+        <result column="cardesc" property="cardesc" jdbcType="BIGINT"/>
+        <result column="info" property="info" jdbcType="VARCHAR"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    carid, carname, carprice, cardate, cardesc, info
+  </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        select
+        <include refid="Base_Column_List"/>
+        from car
+        where carid = #{carid,jdbcType=BIGINT}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from car
+    where carid = #{carid,jdbcType=BIGINT}
+  </delete>
+    <insert id="insert" parameterType="com.qf.pojo.Car">
+    insert into car (carid, carname, carprice, 
+      cardate, cardesc, info)
+    values (#{carid,jdbcType=BIGINT}, #{carname,jdbcType=VARCHAR}, #{carprice,jdbcType=DOUBLE}, 
+      #{cardate,jdbcType=DATE}, #{cardesc,jdbcType=BIGINT}, #{info,jdbcType=VARCHAR})
+  </insert>
+    <insert id="insertSelective" parameterType="com.qf.pojo.Car">
+        insert into car
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="carid != null">
+                carid,
+            </if>
+            <if test="carname != null">
+                carname,
+            </if>
+            <if test="carprice != null">
+                carprice,
+            </if>
+            <if test="cardate != null">
+                cardate,
+            </if>
+            <if test="cardesc != null">
+                cardesc,
+            </if>
+            <if test="info != null">
+                info,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="carid != null">
+                #{carid,jdbcType=BIGINT},
+            </if>
+            <if test="carname != null">
+                #{carname,jdbcType=VARCHAR},
+            </if>
+            <if test="carprice != null">
+                #{carprice,jdbcType=DOUBLE},
+            </if>
+            <if test="cardate != null">
+                #{cardate,jdbcType=DATE},
+            </if>
+            <if test="cardesc != null">
+                #{cardesc,jdbcType=BIGINT},
+            </if>
+            <if test="info != null">
+                #{info,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.qf.pojo.Car">
+        update car
+        <set>
+            <if test="carname != null">
+                carname = #{carname,jdbcType=VARCHAR},
+            </if>
+            <if test="carprice != null">
+                carprice = #{carprice,jdbcType=DOUBLE},
+            </if>
+            <if test="cardate != null">
+                cardate = #{cardate,jdbcType=DATE},
+            </if>
+            <if test="cardesc != null">
+                cardesc = #{cardesc,jdbcType=BIGINT},
+            </if>
+            <if test="info != null">
+                info = #{info,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where carid = #{carid,jdbcType=BIGINT}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.qf.pojo.Car">
+    update car
+    set carname = #{carname,jdbcType=VARCHAR},
+      carprice = #{carprice,jdbcType=DOUBLE},
+      cardate = #{cardate,jdbcType=DATE},
+      cardesc = #{cardesc,jdbcType=BIGINT},
+      info = #{info,jdbcType=VARCHAR}
+    where carid = #{carid,jdbcType=BIGINT}
+  </update>
+<!--==============================================-->
+    <!--CRUD-->
+    <insert id="add1" parameterType="com.qf.pojo.Car">
+      insert into car (carname,carprice,cardate,cardesc,info) values (#{carname},#{carprice},#{cardate},#{cardesc},#{info})
+  </insert>
+
+    <insert id="add2" parameterType="com.qf.pojo.Car">
+        insert into car
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="carname!=null">carname,</if>
+            <if test="carprice!=null">carprice,</if>
+            <if test="cardate!=null">cardate,</if>
+            <if test="cardesc!=null">cardesc,</if>
+            <if test="info!=null">info,</if>
+        </trim>
+        values
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="carname!=null">#{carname},</if>
+            <if test="carprice!=null">#{carprice},</if>
+            <if test="cardate!=null">#{cardate},</if>
+            <if test="cardesc!=null">#{cardesc},</if>
+            <if test="info!=null">#{info},</if>
+        </trim>
+
+    </insert>
+
+    <update id="updele" parameterType="com.qf.pojo.Car">
+        update car
+        <set>
+            <if test="carname!=null">carname=#{carname},</if>
+            <if test="carprice!=null">carprice=#{carprice},</if>
+            <if test="cardate!=null">cardate=#{cardate},</if>
+            <if test="cardesc!=null">cardesc=#{cardesc},</if>
+            <if test="info!=null">info=#{info},</if>
+        </set>
+        where carid=#{carid}
+    </update>
+
+    <select id="findByID" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from car where carid=#{carid}
+    </select>
+
+
+    <select id="findAll" resultType="com.qf.pojo.Car">
+        select
+        <include refid="Base_Column_List"/>
+        from car
+    </select>
+
+
+    <!--条件查询-->
+    <select id="findByxxx" parameterType="com.qf.pojo.Car" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from car
+        <where>
+
+            <if test="carname!=null">carname=#{carname}</if>
+            <if test="carprice!=null">carprice=#{carprice}and</if>
+            <if test="cardate!=null">cardate=#{cardate}and</if>
+            <if test="cardesc!=null">cardesc=#{cardesc}and</if>
+            <if test="info!=null">info=#{info}</if>
+
+        </where>
+    </select>
+
+    <!--分页查询-->
+    <select id="findByPage" parameterType="java.util.Map" resultMap="BaseResultMap">
+        select <include refid="Base_Column_List"/>
+        from car
+        limit #{startIndex},#{pageSize}
+    </select>
+
+    <!--分组查询-->
+    <select id="findByprices" parameterType="java.util.List" resultMap="BaseResultMap">
+        select <include refid="Base_Column_List"/> from car
+        where carprice in
+        <foreach collection="list" item="carprice" open="(" close=")" separator="," >
+            #{carprice}
+        </foreach>
+    </select>
+
+    <!---->
+    <select id="findLikeCarname" parameterType="java.util.Map" resultMap="BaseResultMap">
+        select <include refid="Base_Column_List" /> from car where carname like #{likeString}
+    </select>
+
+</mapper>

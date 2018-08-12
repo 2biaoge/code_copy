@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.qf.dao.BookInfoMapper" >
+  <resultMap id="BaseResultMap" type="com.qf.pojo.BookInfo" >
+    <id column="book_id" property="bookId" jdbcType="BIGINT" />
+    <result column="book_name" property="bookName" jdbcType="VARCHAR" />
+    <result column="book_author" property="bookAuthor" jdbcType="VARCHAR" />
+    <result column="book_price" property="bookPrice" jdbcType="DOUBLE" />
+    <result column="book_date" property="bookDate" jdbcType="BIGINT" />
+    <result column="book_publish" property="bookPublish" jdbcType="VARCHAR" />
+    <result column="book_desc" property="bookDesc" jdbcType="VARCHAR" />
+    <result column="type_id" property="typeId" jdbcType="BIGINT" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    book_id, book_name, book_author, book_price, book_date, book_publish, book_desc, 
+    type_id
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select
+    <include refid="Base_Column_List" />
+    from book_info
+    where book_id = #{bookId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from book_info
+    where book_id = #{bookId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.qf.pojo.BookInfo" >
+    insert into book_info (book_id, book_name, book_author, 
+      book_price, book_date, book_publish, 
+      book_desc, type_id)
+    values (#{bookId,jdbcType=BIGINT}, #{bookName,jdbcType=VARCHAR}, #{bookAuthor,jdbcType=VARCHAR}, 
+      #{bookPrice,jdbcType=DOUBLE}, #{bookDate,jdbcType=BIGINT}, #{bookPublish,jdbcType=VARCHAR}, 
+      #{bookDesc,jdbcType=VARCHAR}, #{typeId,jdbcType=BIGINT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.qf.pojo.BookInfo" >
+    insert into book_info
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="bookId != null" >
+        book_id,
+      </if>
+      <if test="bookName != null" >
+        book_name,
+      </if>
+      <if test="bookAuthor != null" >
+        book_author,
+      </if>
+      <if test="bookPrice != null" >
+        book_price,
+      </if>
+      <if test="bookDate != null" >
+        book_date,
+      </if>
+      <if test="bookPublish != null" >
+        book_publish,
+      </if>
+      <if test="bookDesc != null" >
+        book_desc,
+      </if>
+      <if test="typeId != null" >
+        type_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="bookId != null" >
+        #{bookId,jdbcType=BIGINT},
+      </if>
+      <if test="bookName != null" >
+        #{bookName,jdbcType=VARCHAR},
+      </if>
+      <if test="bookAuthor != null" >
+        #{bookAuthor,jdbcType=VARCHAR},
+      </if>
+      <if test="bookPrice != null" >
+        #{bookPrice,jdbcType=DOUBLE},
+      </if>
+      <if test="bookDate != null" >
+        #{bookDate,jdbcType=BIGINT},
+      </if>
+      <if test="bookPublish != null" >
+        #{bookPublish,jdbcType=VARCHAR},
+      </if>
+      <if test="bookDesc != null" >
+        #{bookDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="typeId != null" >
+        #{typeId,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.qf.pojo.BookInfo" >
+    update book_info
+    <set >
+      <if test="bookName != null" >
+        book_name = #{bookName,jdbcType=VARCHAR},
+      </if>
+      <if test="bookAuthor != null" >
+        book_author = #{bookAuthor,jdbcType=VARCHAR},
+      </if>
+      <if test="bookPrice != null" >
+        book_price = #{bookPrice,jdbcType=DOUBLE},
+      </if>
+      <if test="bookDate != null" >
+        book_date = #{bookDate,jdbcType=BIGINT},
+      </if>
+      <if test="bookPublish != null" >
+        book_publish = #{bookPublish,jdbcType=VARCHAR},
+      </if>
+      <if test="bookDesc != null" >
+        book_desc = #{bookDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="typeId != null" >
+        type_id = #{typeId,jdbcType=BIGINT},
+      </if>
+    </set>
+    where book_id = #{bookId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.qf.pojo.BookInfo" >
+    update book_info
+    set book_name = #{bookName,jdbcType=VARCHAR},
+      book_author = #{bookAuthor,jdbcType=VARCHAR},
+      book_price = #{bookPrice,jdbcType=DOUBLE},
+      book_date = #{bookDate,jdbcType=BIGINT},
+      book_publish = #{bookPublish,jdbcType=VARCHAR},
+      book_desc = #{bookDesc,jdbcType=VARCHAR},
+      type_id = #{typeId,jdbcType=BIGINT}
+    where book_id = #{bookId,jdbcType=BIGINT}
+  </update>
+
+    <!--多对一查询，根据图书着分类  返回的内容需要组合-->
+    <select id="selectBookAndTypeById" parameterType="java.lang.Long" resultType="BaseResultMap">
+        select book_info.*,book_type.*
+        from book_info,book_type
+        where
+        book_info.type_id=book_type.type_id and book_info.book_id=#{book_id}
+
+    </select>
+</mapper>
