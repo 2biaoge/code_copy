@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans 
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/aop
+        http://www.springframework.org/schema/aop/spring-aop.xsd
+        http://www.springframework.org/schema/tx
+        http://www.springframework.org/schema/tx/spring-tx.xsd
+        http://www.springframework.org/schema/context   
+        http://www.springframework.org/schema/context/spring-context.xsd   
+        http://www.springframework.org/schema/mvc   
+        http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+
+    <!--1.创建数据源-->
+    <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
+        <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
+        <property name="url" value="jdbc:mysql:///mybatis_text?characterEncoding=utf-8"/>
+        <property name="username" value="root"/>
+        <property name="password" value="root"/>
+    </bean>
+    <!--2.创建SqlSessionFactory--><!--功能Mybatis-Config.xml-->
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <!--注入数据源-->
+        <property name="dataSource" ref="dataSource"/>
+        <!--注册实体关联Mapper文件-->
+        <property name="mapperLocations" >
+            <list>
+                <value>com/qf/mapper/UserMapper.xml</value>
+            </list>
+        </property>
+    </bean>
+
+    <!--3.创建Dao层实体类对象-->
+    <!-- 没有DAO的具体实现类，怎么办？DAO接口扫描动态生成DAO接口的代理实现类不需要加id属性，这里扫描的是所有的DAO接口。
+如何把DAO注入给服务层呢？使用注解方式：注入Mapper代理接口。使用自动装配就可以了。动态生成代理实现类-->
+
+<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+    <!--必须定位到具体的包-->
+    <property name="basePackage" value="com.qf.dao"></property>
+
+</bean>
+
+    <!--4.-->
+
+</beans>

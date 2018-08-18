@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans 
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/aop
+        http://www.springframework.org/schema/aop/spring-aop.xsd
+        http://www.springframework.org/schema/tx
+        http://www.springframework.org/schema/tx/spring-tx.xsd
+        http://www.springframework.org/schema/context   
+        http://www.springframework.org/schema/context/spring-context.xsd   
+        http://www.springframework.org/schema/mvc   
+        http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+
+
+    <!--配置整合持久层-->
+    <!--1.创建数据源-->
+    <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
+        <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
+        <property name="url" value="jdbc:mysql:///mybatis_text?characterEncoding=utf-8"/>
+        <property name="username" value="root"/>
+        <property name="password" value="root"/>
+        <property name="defaultAutoCommit" value="false"></property>
+    </bean>
+    <!--2.创建SqlSessionFactory，由Spring提供--><!--需要Mybatis——config.xml文件-->
+    <bean id="sessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <!--mybatis核心配置部分  配置数据源、注册实体-->
+        <property name="dataSource" ref="dataSource"></property>
+        <property name="mapperLocations" value="classpath:com/qf/mapper/*Mapper.xml"></property>
+    </bean>
+
+    <!--3.创建DAO层对象--><!--注入SqlSessionFactory-->
+    <bean id="userDao" class="com.qf.dao.UserDaoImpl">
+        <property name="sqlSessionFactory" ref="sessionFactory"></property>
+    </bean>
+
+
+    <!--4.创建服务层，注入Dao目标类对象-->
+    <bean id="userService" class="com.qf.service.UserServiceImpl">
+        <property name="userDao" ref="userDao"/>
+    </bean>
+
+   <!-- 5.创建事物管理通知对象-->
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <!--注入数据源-->
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+    <!--6.自定义事物通知切面，让食物应用到具体的方法-->
+    <tx:advice id="txAdvice" transaction-manager="transactionManager">
+        <tx:attributes>
+            <tx:method name="insert*" propagation="REQUIRED"/>
+            <tx:method name="del*" propagation="REQUIRED"/>
+            <tx:method name="update*" propagation="REQUIRED"/>
+            <tx:method name="find*" read-only="true"/>
+        </tx:attributes>
+    </tx:advice>
+
+    <!--7.Aop编程-->
+    <aop:config >
+        <aop:pointcut id="myPoint" expression="execution(* com.qf.service.*.*(..))"></aop:pointcut>
+        <aop:advisor advice-ref="txAdvice" pointcut-ref="myPoint"></aop:advisor>
+    </aop:config>
+</beans>
