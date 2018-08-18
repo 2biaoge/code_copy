@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans 
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/aop
+        http://www.springframework.org/schema/aop/spring-aop.xsd
+        http://www.springframework.org/schema/tx
+        http://www.springframework.org/schema/tx/spring-tx.xsd
+        http://www.springframework.org/schema/context   
+        http://www.springframework.org/schema/context/spring-context.xsd   
+        http://www.springframework.org/schema/mvc   
+        http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+<!--
+    &lt;!&ndash;第二步：配置注解的映射器和适配器
+    RequestMappingHandlerMapping
+    RequestMappingHandlerAdapter&ndash;&gt;
+    &lt;!&ndash;注解的映射器&ndash;&gt;
+    <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping"></bean>
+
+    &lt;!&ndash;注解的适配器&ndash;&gt;
+    <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter"></bean>
+
+-->
+
+
+    <!--替换上边的映射器和适配器-->
+    <mvc:annotation-driven></mvc:annotation-driven>
+
+    <!--配置视图解析器-->
+    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver"></bean>
+
+    <!--注解扫描-->
+    <context:component-scan base-package="com.qf.action"></context:component-scan>
+
+
+</beans>
