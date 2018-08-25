@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx" 
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:jpa="http://www.springframework.org/schema/data/jpa"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/aop
+        http://www.springframework.org/schema/aop/spring-aop.xsd
+        http://www.springframework.org/schema/tx
+        http://www.springframework.org/schema/tx/spring-tx.xsd
+        http://www.springframework.org/schema/context   
+        http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/data/jpa 
+        http://www.springframework.org/schema/data/jpa/spring-jpa.xsd   
+        http://www.springframework.org/schema/mvc   
+        http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+
+	<!-- 1，创建数据源 -->
+	<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+		<property name="driverClass" value="com.mysql.jdbc.Driver"></property>
+		<property name="jdbcUrl" value="jdbc:mysql://localhost:3306/qf?characterEncoding=utf-8"></property>
+		<property name="user" value="root"></property>
+		<property name="password" value=""></property>
+	</bean>
+	<!-- 2,创建jpa实体管理工厂 替代JPA的核心配置文件 -->
+	<bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+		<property name="dataSource" ref="dataSource"></property>
+		<property name="jpaProperties">
+			<props>
+				<prop key="hibernate.dialect">org.hibernate.dialect.MySQL55Dialect</prop>
+				<prop key="hibernate.show_sql">true</prop>
+				<prop key="hibernate.format_sql">true</prop>
+			</props>
+		</property>
+		<!-- 批量注册实体 -->
+		<property name="packagesToScan" value="com.qf.pojo"></property>
+		<!--  指定 JPA的适配器 -->
+		<property name="jpaVendorAdapter">
+			<!-- 把实现类的对象给接口的引用 -->
+			<bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter"></bean>
+		</property>
+	</bean>
+
+	<!-- 3,创建持久层DAO对象，这里动态创建，需要扫描  注入工厂 -->
+	<jpa:repositories base-package="com.qf.dao"
+					  entity-manager-factory-ref="entityManagerFactory"
+					  transaction-manager-ref="jpaTransactionManager"></jpa:repositories>
+
+	<!-- 4,创建服务层对象，也是扫描  -->
+	<context:component-scan base-package="com.qf.service"></context:component-scan>
+	<!-- 5,创建JPA事务管理通知对象-->
+	<bean id="jpaTransactionManager" class="org.springframework.orm.jpa.JpaTransactionManager"></bean>
+	<!-- 6,AOP编程:使用注解-->
+	<tx:annotation-driven transaction-manager="jpaTransactionManager"></tx:annotation-driven>
+		
+	
+</beans>
