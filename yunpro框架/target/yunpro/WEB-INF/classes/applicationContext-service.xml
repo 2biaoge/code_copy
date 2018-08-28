@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans 
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/aop
+        http://www.springframework.org/schema/aop/spring-aop.xsd
+        http://www.springframework.org/schema/tx
+        http://www.springframework.org/schema/tx/spring-tx.xsd
+        http://www.springframework.org/schema/context   
+        http://www.springframework.org/schema/context/spring-context.xsd   
+        http://www.springframework.org/schema/mvc   
+        http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+
+<!--==========================DAO持久层============================================================-->
+
+    <!--1.创建数据源--><!--加载配置文件-->
+
+    <context:property-placeholder location="classpath:db.properties"></context:property-placeholder>
+    <bean name="druidDataSource" class="com.alibaba.druid.pool.DruidDataSource">
+        <property name="driverClassName" value="${mydriver}"></property>
+        <property name="url" value="${myurl}"></property>
+        <property name="username" value="${myname}"></property>
+        <property name="password" value="${mypass}"></property>
+        <property name="maxWait" value="${mywait}"></property>
+        <property name="maxActive" value="${myactive}"></property>
+
+    </bean>
+
+    <!--2.创建SqlSessionFactory工厂-->
+    <bean name="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="druidDataSource"></property>
+        <property name="mapperLocations" value="classpath:com/qf/mapper/*Mapper.xml"></property>
+        <!--配置分页插件-->
+        <property name="plugins">
+            <array>
+                <!--value===字符串-->
+                <!--这里需要的是实现类的对象-->
+                <bean class="com.github.pagehelper.PageInterceptor">
+
+                    <!--指定数据库的方言-->
+                    <property name="properties" >
+                        <props>
+                            <prop key="helperDialect">mysql</prop>
+                        </props>
+                    </property>
+                </bean>
+            </array>
+        </property>
+    </bean>
+
+    <!--3.创建持久层对象 使用DAO-MApper扫描 MapperScannerConfigurer   自动创建包下面的实现类-->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="com.qf.dao"></property>
+    </bean>
+<!--=================================Spring服务层====================================================-->
+    <!--4.创建服务层对象  注解扫描-->
+    <context:component-scan base-package="com.qf.service"></context:component-scan>
+
+    <!--5.创建事物通知对象-->
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="druidDataSource"></property>
+    </bean>
+
+    <!--6.AOP编程-->
+    <!--6.1 事物切面-->
+    <tx:advice id="myAdivce" transaction-manager="transactionManager">
+        <tx:attributes>
+            <tx:method name="add*" propagation="REQUIRED"/>
+            <tx:method name="del*" propagation="REQUIRED"/>
+            <tx:method name="update*" propagation="REQUIRED"/>
+            <tx:method name="find*" read-only="true"/>
+        </tx:attributes>
+    </tx:advice>
+    <!--6.2全自动AOP-->
+    <aop:config>
+        <aop:pointcut id="mypoint" expression="execution(* com.qf.service.*.*(..))"/>
+        <aop:advisor advice-ref="myAdivce" pointcut-ref="mypoint"></aop:advisor>
+    </aop:config>
+    <!--===============================SpringMVC表现层================================================-->
+
+    <!--7.创建表现层对象-->
+
+    <!--8.配置处理器映射器和适配器-->
+
+    <!--9.配置视图解析器-->
+
+
+
+</beans>
